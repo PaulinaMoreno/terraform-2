@@ -17,7 +17,7 @@ resource "azurerm_resource_group" "myterraformgroup" {
 resource "azurerm_virtual_network" "myterraformnetwork" {
     name                = "wongrobert-myVnet"
     address_space       = ["10.0.0.0/16"]
-    location            = "eastus"
+    location            = azurerm_resource_group.myterraformgroup.location
     resource_group_name = azurerm_resource_group.myterraformgroup.name
     tags = {
         environment = "Terraform Demo"
@@ -33,7 +33,7 @@ resource "azurerm_subnet" "myterraformsubnet" {
 # Create public IPs
 resource "azurerm_public_ip" "myterraformpublicip" {
     name                         = "wongrobert-myPublicIP"
-    location                     = "eastus"
+    location                     = azurerm_resource_group.myterraformgroup.location
     resource_group_name          = azurerm_resource_group.myterraformgroup.name
     allocation_method            = "Dynamic"
     tags = {
@@ -63,7 +63,7 @@ resource "azurerm_network_security_group" "myterraformnsg" {
 # Create network interface
 resource "azurerm_network_interface" "myterraformnic" {
     name                      = "wongrobertmyNIC"
-    location                  = "eastus"
+    location                  = azurerm_resource_group.myterraformgroup.location
     resource_group_name       = azurerm_resource_group.myterraformgroup.name
     ip_configuration {
         name                          = "myNicConfiguration"
@@ -108,7 +108,7 @@ output "tls_private_key" { value = "${tls_private_key.example_ssh.private_key_pe
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "myterraformvm" {
     name                  = "wongrobert-myVM"
-    location              = "eastus"
+    location              = azurerm_resource_group.myterraformgroup.location
     resource_group_name   = azurerm_resource_group.myterraformgroup.name
     network_interface_ids = [azurerm_network_interface.myterraformnic.id]
     size                  = "Standard_DS1_v2"
